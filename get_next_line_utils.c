@@ -6,11 +6,26 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 12:25:36 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/05/25 13:29:50 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/05/26 13:14:29 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_strdup(const char *s)
+{
+	char	*dup;
+	size_t	len;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	dup = malloc(sizeof(char) * (len + 1));
+	if (!dup)
+		return (NULL);
+	ft_strlcpy(dup, s, len + 1);
+	return (dup);
+}
 
 size_t	ft_strlen(const char *s)
 {
@@ -87,8 +102,8 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-//	if (start > ft_strlen(s))
-//		return (ft_strdup(""));
+	if (start > ft_strlen(s))
+		return (ft_strdup(""));
 	if (len > (ft_strlen(s) - start))
 		len = ft_strlen(s) - start;
 	sub = malloc(sizeof(char) * (len + 1));
