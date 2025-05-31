@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 12:24:45 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/05/26 16:36:39 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/05/31 18:13:23 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,36 +33,40 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *) &str[i]);
 	return (NULL);
 }
+
 static char	*read_file(int	fd, char *buffer)
 {
 	char	*templine;
 	char	*stash;
 	ssize_t		r;
 
-	templine = malloc(sizeof(char)* BUFFER_SIZE + 1);
+	if (ft_strchr(buffer, '\n'))
+		return (buffer);
+	templine = malloc(1);
 	if (!templine)
 		return NULL;
-	//if (buffer[0] == '\0')
-	//	buffer = templine;
-	
-	stash = buffer;
-	r = read(fd, buffer, BUFFER_SIZE);
-	buffer[BUFFER_SIZE + 1] = '\0';
-	while (r > 0 && (!ft_strchr(buffer, '\n')))
-	{	
-		//if (ft_strchr(buffer, '\n'))
-		 //	break;
-		templine = ft_strjoin(templine, buffer);
-		r = read(fd, buffer, BUFFER_SIZE);
-		
-	}
-	templine = ft_strjoin(templine, buffer);
-	if (r <= 0)
+	templine [0] = '\0';
+	stash = ft_strjoin(templine, buffer);
+	free (templine);
+	templine = stash;
+	r = 1;
+	while (r > 0)
 	{
-		free (templine);
-		return (NULL);
+		r = read(fd, buffer, BUFFER_SIZE);
+		if (r <= 0)
+		{
+			free (templine);
+			return (NULL);
+		}
+		buffer[r] = '\0';
+		stash = ft_strjoin(templine, buffer);
+		free(templine);
+		templine = stash;
+		if (ft_strchr(buffer, '\n'))
+			break;
 	}
 	return (templine);
+	
 }
 
 static char	*extract_line(char	*templine)
@@ -89,32 +93,21 @@ static char	*extract_leftover(char *buffer)
 	{
 		if (buffer[i] == '\n')
 		{
-			start = i + 1;
+			i++;
+			start = i;
+			break;
 		}
 		i++;
 	}
+	i = ft_strlen(buffer);
 	buffer = ft_substr(buffer, start , i - start);
 	return (buffer);
 }
-/*	while (buffer[i])
-	{
-		while (buffer[i] != '\n' && buffer[i])
-		{
-			i++;
-			start = i + 2;
-		}
-		i++;
-	}
-	buffer = ft_substr(buffer, start , i);
-	return (buffer);
 
-}
-	*/
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
 	char	*line;
-
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (!buffer)
@@ -138,6 +131,8 @@ int	main(int argc, char **argv)
 {
 	int fd;
 	char	*line;
+
+	fd = open(argv[1], O_RDONLY);
 		
 	if (argc < 2)
 	{
@@ -145,15 +140,6 @@ int	main(int argc, char **argv)
 		return (1);
 		
 	}
-	fd = open(argv[1], O_RDONLY);
-//	line = get_next_line(fd);
-//	printf("%s", line);
-	/*
-	(void)argv;
-	(void)argc;
-	fd = open("text1.txt", O_RDONLY);
-	*/
-
 	while (1)
 	{
 		line = get_next_line(fd);
@@ -162,8 +148,11 @@ int	main(int argc, char **argv)
 			break ;
 		free (line);
 	}
-	//free (line);
+	/*	fd = open(argv[1], O_RDONLY);
+	line = get_next_line(fd);
+	printf("%s", line);
+	line = get_next_line(fd);
+	printf("%s", line);*/
 	close(fd);
 	return (0);
-
 }
