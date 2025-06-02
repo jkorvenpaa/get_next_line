@@ -6,7 +6,7 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 12:25:36 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/05/26 13:14:29 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/06/02 17:22:47 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,17 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 }
 
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*gnl_strjoin(char *s1, char *s2)
 {
 	char	*dest;
 	size_t	s1_size;
 	size_t	size;
 
 	if (!s1 || !s2)
+	{
+		free (s1);
 		return (NULL);
+	}
 	s1_size = ft_strlen(s1) + 1;
 	size = s1_size + ft_strlen(s2);
 	dest = malloc(sizeof(char) * size);
@@ -94,9 +97,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	ft_strlcpy(dest, s1, s1_size);
 	ft_strlcat(dest, s2, size);
+	free (s1);
 	return (dest);
 }
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	char	*sub;
 
@@ -110,5 +114,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (!sub)
 		return (NULL);
 	ft_strlcpy(sub, &s[start], len + 1);
+	free(s);
 	return (sub);
 }
