@@ -6,28 +6,28 @@
 /*   By: jkorvenp <jkorvenp@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 12:25:36 by jkorvenp          #+#    #+#             */
-/*   Updated: 2025/06/03 13:52:03 by jkorvenp         ###   ########.fr       */
+/*   Updated: 2025/06/06 14:32:01 by jkorvenp         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_strdup(const char *s)
+char	*gnl_strdup(char *s)
 {
 	char	*dup;
 	size_t	len;
 
 	if (!s)
 		return (NULL);
-	len = ft_strlen(s);
+	len = gnl_strlen(s);
 	dup = malloc(sizeof(char) * (len + 1));
 	if (!dup)
 		return (NULL);
-	ft_strlcpy(dup, s, len + 1);
+	gnl_strlcpy(dup, s, len + 1);
 	return (dup);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	gnl_strlen(const char *s)
 {
 	size_t	i;
 
@@ -37,12 +37,12 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+size_t	gnl_strlcpy(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	srclen;
 
-	srclen = ft_strlen(src);
+	srclen = gnl_strlen(src);
 	i = 0;
 	if (size == 0)
 		return (srclen);
@@ -55,7 +55,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t size)
 	return (srclen);
 }
 
-size_t	ft_strlcat(char *dst, const char *src, size_t size)
+size_t	gnl_strlcat(char *dst, const char *src, size_t size)
 {
 	size_t	i;
 	size_t	ls;
@@ -67,7 +67,7 @@ size_t	ft_strlcat(char *dst, const char *src, size_t size)
 	{
 		ld++;
 	}
-	ls = ft_strlen(src);
+	ls = gnl_strlen(src);
 	if (ld == size)
 		return (size + ls);
 	i = 0;
@@ -91,13 +91,16 @@ char	*gnl_strjoin(char *s1, char *s2)
 		free (s1);
 		return (NULL);
 	}
-	s1_size = ft_strlen(s1) + 1;
-	size = s1_size + ft_strlen(s2);
+	s1_size = gnl_strlen(s1) + 1;
+	size = s1_size + gnl_strlen(s2);
 	dest = malloc(sizeof(char) * size);
 	if (!dest)
+	{
+		free(s1);
 		return (NULL);
-	ft_strlcpy(dest, s1, s1_size);
-	ft_strlcat(dest, s2, size);
+	}
+	gnl_strlcpy(dest, s1, s1_size);
+	gnl_strlcat(dest, s2, size);
 	free (s1);
 	return (dest);
 }
